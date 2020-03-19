@@ -1,0 +1,60 @@
+.aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+
+
+  .form {
+    text-align: center;
+
+    .search-input {
+      padding: 10px;
+
+      border-top: $color-background;
+      border-left: $color-background;
+      border-right: $color-background;
+      border-bottom: solid 1px $color-background-favourite;
+
+      font-family: $secondary-font;
+      font-size: 12px;
+    }
+
+    & .search-button {
+      font-family: $secondary-font;
+      font-size: 12px;
+      background-color: $color-background-favourite;
+      color: $color-background;
+      padding: 10px;
+      border: 5px;
+      border-color: $color-font-favourite;
+      width: 80px;
+    }
+  }
+
+  .hidden {
+    visibility: hidden;
+  }
+
+
+  & .favourite-container {
+    text-align: center;
+
+    .aside-title {
+      @include tittle-aside;
+    }
+
+    & .ul-favourite {
+      font-family: $secondary-font;
+    }
+  }
+}
+
+
+
+
+@media (min-width: 768px) {
+  .aside {
+    max-width: 400px;
+  }
+}

@@ -1,0 +1,14 @@
+.section {
+  background-color: $color-background-section;
+  color: $color-font-section;
+
+  @include section;
+
+}
+
+.section-favourite {
+  background-color: $color-background-favourite;
+  color: $color-font-favourite;
+
+  @include section;
+}
