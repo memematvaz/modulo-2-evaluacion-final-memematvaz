@@ -1,8 +1,5 @@
 .aside {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
+  display: block;
 
 
   .form {
@@ -55,6 +52,7 @@
 
 @media (min-width: 768px) {
   .aside {
-    max-width: 400px;
+    max-width: 500px;
+    min-width: 300px;
   }
 }

@@ -11,18 +11,3 @@
   color: black;
   text-align: center;
 }
-
-
-@mixin section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  
-  width: 30opx;
-
-
-  
-  img {
-    width: 280px;
-  }
-}
