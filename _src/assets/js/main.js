@@ -3,7 +3,7 @@
 console.log('>> Ready :)');
 
 
-//VARIABLES ALL PROECT
+//VARIABLES ALL PROJECT
 const searchButton = document.querySelector('#search-button')
 const searchInput = document.querySelector('#search-input')
 const main = document.querySelector('#main')
@@ -11,36 +11,37 @@ const favouriteContainerList = document.querySelector('#favourites-series');
 
 
 
+
 let series = [];
-
 let favouriteList = [];
-
-//const favouritesList = localStorage();
 
 
 //CONNECT TO API
 
-function connectToApi() {
-
+function searchSeries() {
   let url = 'http://api.tvmaze.com/search/shows?q=' + searchInput.value;
   fetch(url)
     .then(response => response.json())
     .then(data => {
       series = data
-      console.log(series)
-
       renderSeries(series)
 
     })
-
-
-
-
 };
 
-connectToApi()
 
-
+function getSerieFromAPI(serieID) {
+    let url = 'http://api.tvmaze.com/shows/' + serieID;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+          console.log(serieID, data)
+        renderFavoriteShow(data);
+        
+      })
+  };
+  
+  
 //RENDER SERIES SEARCHED
 
 
@@ -50,16 +51,13 @@ function renderSeries(series) {
 
   for (let item of series) {
     if (item.show.image !== null) {
-      main.innerHTML += `<section id='${item.show.id.toString()}' class='section'><div><img src=${item.show.image.medium} alt=${item.show.name} class='image container'></div><h3 class='section-title'>${item.show.name}</h3></section>`
+      main.innerHTML += `<section id='${item.show.id.toString()}' class='section'><div><img src=${item.show.image.medium} alt=${item.show.name} class='image'></div><h3 class='section-title'>${item.show.name}</h3></section>`
     } else {
       main.innerHTML += `<section id='${item.show.id.toString()}' class='section'><div><img src='https://via.placeholder.com/210x295/ffffff/666666/?
     text=TV' alt=${item.show.name} class='image container'></div><h3 class='section-title'>${item.show.name}</h3></section>`
     }
   }
-
-
   addClickListeners();
-
 }
 
 function addClickListeners() {
@@ -72,55 +70,51 @@ function addClickListeners() {
 //FAVOURITES
 
 
+function addToFavorites(serieID) {
+    let favoriteList = JSON.parse(localStorage.getItem('favouriteIDsList'));
+    if(favoriteList === null) {
+        favoriteList = [];
+    }
+    if (favoriteList.indexOf(serieID) === -1) {
+        favoriteList.push(serieID);
+        localStorage.setItem('favouriteIDsList', JSON.stringify(favoriteList));
+    }
+}
+
 function saveFavourites(event) {
-  const favourite = event.currentTarget.id;
+  const serieID = event.currentTarget.id;
   if (favouriteList.indexOf(favourite) === -1) {
-    favouriteList.push(favourite);
-    // setLocalStorage(favouriteList);
-    renderFavourites(favouriteList);
-  } else {
-    alert('Esa serie ya está en favoritos')
-  }
+ 
+    // guardar ID en localStorage
+    addToFavorites(serieID);
+    // renderizar todos las series
+    renderAllSavedShows()
 
-}
-
-
-function getIdSerie(idSerie) {
-    console.log(idSerie)
-  for (let serie of series) {
-    if (idSerie === parseInt(serie.show.id))
-    
-    
-    
-    {
-      return serie;
+    } else {
+        alert('Esa serie ya está en favoritos')
     }
-  }
 }
 
 
-function renderFavourites(favouriteList) {
-    
+
+function renderAllSavedShows() {
     favouriteContainerList.innerHTML = '';
-
-  for (let element of favouriteList) {
-    let serie = getIdSerie(element);
-
-    if (serie) {
-        favouriteContainerList.innerHTML += `<li class='li-title'>${item.show.name}`
+    const favoriteList = JSON.parse(localStorage.getItem('favouriteIDsList'))
+    if(favoriteList !== null) {
+        for( let serieID of favoriteList){
+            getSerieFromAPI(serieID)
+        }
     }
-  }
 }
 
 
+function renderFavoriteShow(serieObjet) {
+    favouriteContainerList.innerHTML += `<li class='li-title'>${serieObjet.name}<li>`;
+}
 
 
-//LOCALSTORAGE
+//LISTENERS ALL PROJECT
+searchButton.addEventListener('click', searchSeries)
 
-
-
-
-//LISTENERS ALL PROJECT 
-
-
-searchButton.addEventListener('click', connectToApi)
+//LOAD PREVIUS SAVED SHOWS
+renderAllSavedShows()
