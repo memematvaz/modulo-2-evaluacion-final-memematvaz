@@ -78,42 +78,56 @@ function readLocalStorage() {
 
 
 function saveFavourites(event) {
-let changeColor = event.currentTarget;
-  changeColor.classList.add("section-favourite")
 
 
-  const favourite = event.currentTarget.id; //<--aquí te falta acceder al id
-  //elimina toda la comparación para ver si existe la peli hasta que la parte básica de meter
-  //en favoritos no funcione bien
+  const favourite = event.currentTarget.id;
   const objectSerie = getSerieId(favourite);
-  selectedSeries.push(objectSerie.show); //<--aquí tienes que pasarle el objeto
 
-  setLocalStorage()
-  renderFavourites(selectedSeries);
+  if (selectedSeries.map(serie => serie.id).indexOf(objectSerie.show.id) === -1) {
 
-}
+    selectedSeries.push(objectSerie.show);
 
+ 
 
-function getSerieId(id) { //<--aqui te falta pasarle el id como argumento
-  return serieList.find(serie => serie.show.id === parseInt(id)) //<--y aquí decirle al objeto que lo que quieres comparar es el id
-}
-
-
-
-
-function renderFavourites(favouriteArray) {
-
-  favouriteContainerList.innerHTML = '';
-  for (let favourite of favouriteArray) {
-    if (favourite.image !== null) {
-      favouriteContainerList.innerHTML += `<li><img src=${favourite.image.medium} alt=${favourite.name} </img> <p  class='li-title'>${favourite.name}</p><li>`;
-    } else {
-      favouriteContainerList.innerHTML += `<li><img src='https://via.placeholder.com/210x295/ffffff/666666/?
-    text=TV' alt=${favourite.name} </img> <p  class='li-title'>${favourite.name}</p><li>`;
-    }
+    setLocalStorage()
+    renderFavourites(selectedSeries);
+  } else {
+    alert('Esa serie ya está en favoritos')
   }
 
+  changeColor();
 }
+
+
+/* function changeColor(objectSerie) {
+ if (selectedSeries.map(serie => serie.id).indexOf(objectSerie.show.id) !== -1) {
+   
+  }
+}*/
+
+
+
+
+  function getSerieId(id) { //<--aqui te falta pasarle el id como argumento
+    return serieList.find(serie => serie.show.id === parseInt(id)) //<--y aquí decirle al objeto que lo que quieres comparar es el id
+  }
+
+
+
+
+  function renderFavourites(favouriteArray) {
+
+    favouriteContainerList.innerHTML = '';
+    for (let favourite of favouriteArray) {
+      if (favourite.image !== null) {
+        favouriteContainerList.innerHTML += `<li><img src=${favourite.image.medium} alt=${favourite.name} </img> <p  class='li-title'>${favourite.name}</p><li>`;
+      } else {
+        favouriteContainerList.innerHTML += `<li><img src='https://via.placeholder.com/210x295/ffffff/666666/?
+    text=TV' alt=${favourite.name} </img> <p  class='li-title'>${favourite.name}</p><li>`;
+      }
+    }
+
+  }
 
 
 
