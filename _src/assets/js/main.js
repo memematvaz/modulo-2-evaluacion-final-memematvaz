@@ -78,7 +78,8 @@ function readLocalStorage() {
 
 
 function saveFavourites(event) {
-
+  let changeColor = event.currentTarget;
+  changeColor.classList.add("section-favourite");
 
   const favourite = event.currentTarget.id;
   const objectSerie = getSerieId(favourite);
@@ -87,7 +88,7 @@ function saveFavourites(event) {
 
     selectedSeries.push(objectSerie.show);
 
- 
+
 
     setLocalStorage()
     renderFavourites(selectedSeries);
@@ -95,62 +96,41 @@ function saveFavourites(event) {
     alert('Esa serie ya está en favoritos')
   }
 
-  changeColor();
 }
 
 
-/* function changeColor(objectSerie) {
- if (selectedSeries.map(serie => serie.id).indexOf(objectSerie.show.id) !== -1) {
-   
-  }
-}*/
 
 
 
 
-  function getSerieId(id) { //<--aqui te falta pasarle el id como argumento
-    return serieList.find(serie => serie.show.id === parseInt(id)) //<--y aquí decirle al objeto que lo que quieres comparar es el id
-  }
+
+function getSerieId(id) { 
+  return serieList.find(serie => serie.show.id === parseInt(id)) 
+}
 
 
 
 
-  function renderFavourites(favouriteArray) {
+function renderFavourites(favouriteArray) {
 
-    favouriteContainerList.innerHTML = '';
-    for (let favourite of favouriteArray) {
-      if (favourite.image !== null) {
-        favouriteContainerList.innerHTML += `<li><img src=${favourite.image.medium} alt=${favourite.name} </img> <p  class='li-title'>${favourite.name}</p><li>`;
-      } else {
-        favouriteContainerList.innerHTML += `<li><img src='https://via.placeholder.com/210x295/ffffff/666666/?
+  favouriteContainerList.innerHTML = '';
+  for (let favourite of favouriteArray) {
+    if (favourite.image !== null) {
+      favouriteContainerList.innerHTML += `<li><img src=${favourite.image.medium} alt=${favourite.name} </img> <p  class='li-title'>${favourite.name}</p><li>`;
+    } else {
+      favouriteContainerList.innerHTML += `<li><img src='https://via.placeholder.com/210x295/ffffff/666666/?
     text=TV' alt=${favourite.name} </img> <p  class='li-title'>${favourite.name}</p><li>`;
-      }
-    }
-
-  }
-
-
-
-
-
-
-  function addFavouriteListeners() {
-    const liList = document.querySelectorAll('button');
-    for (let li of liList) {
-      li.addEventListener('click', removeSerie);
     }
   }
 
+}
 
-  // function removeSerie(event) {
-  //   const elemId = event.currentTarget.parentElement.id;
-  //   const elemIndex = selectedSeries.indexOf(elemId);
-  //   selectedSeries.splice(elemIndex, 1);
-  //   setLocalStorage();
-  //   renderFavourites(selectedSeries);
-  // }
 
-  renderFavourites(selectedSeries)
 
-  //LISTENERS ALL PROJECT
-  searchButton.addEventListener('click', connectToApi)
+
+
+
+renderFavourites(selectedSeries)
+
+//LISTENERS ALL PROJECT
+searchButton.addEventListener('click', connectToApi)

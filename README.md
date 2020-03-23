@@ -1,11 +1,16 @@
-Modulo 1 Evaluación final de María Mateo (memematvaz en Github)
+Ejercicio de evaluación final del Modulo 2 de Adalab hecho por María Mateo (memematvaz en Github)
 
 Utilizando el Starter Kit de Adalab y mediante Gulp he elaborado un sistema de carpetas que incluye particiones de SCSS, particiones de HTML y un web server.
 
-El ejercicio consistía en  la maquetación de un diseño dado, una landing page que además fuera responsive.
+El ejercicio consistía en desarrollar una aplicación web de búsqueda de series de TV, pudiendo marcarlas como favoritas y guardarlas en localstorage.
 
-He utilizado flexbox en todo el proyecto excepto en la partición que he llamado options en la que he usado CSS grid.
+Las funciones utilizadas han sido:
+connectToApi() 
+renderSeries(serieList)
+addClickListeners()
+setLocalStorage()
+realLocalStorage()
+saveFavourites(event)
+getSerieId(id)
+renderFavourites(favouriteArray)
 
-He añadido transiciones de tipo hover en todos los enlaces exceptuando las listas del footer.
-
-He utilizado varias pautas de accesibilidad como las etiquetas ARIA o que todos los buttons contengan un focus.
