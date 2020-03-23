@@ -1,9 +1,12 @@
+
+
+
 'use strict';
 
 console.log('>> Ready :)');
 
 
-//VARIABLES ALL PROJECT
+//VARIABLES ALL PROECT
 const searchButton = document.querySelector('#search-button')
 const searchInput = document.querySelector('#search-input')
 const main = document.querySelector('#main')
@@ -11,37 +14,25 @@ const favouriteContainerList = document.querySelector('#favourites-series');
 
 
 
-
-let series = [];
-let favouriteList = [];
+let serieList = null;
+const selectedSeries = readLocalStorage();
+let favouriteArray = []
 
 
 //CONNECT TO API
 
-function searchSeries() {
+function connectToApi() {
   let url = 'http://api.tvmaze.com/search/shows?q=' + searchInput.value;
   fetch(url)
     .then(response => response.json())
     .then(data => {
-      series = data
-      renderSeries(series)
-
+      
+      serieList = data;
+      renderSeries(serieList);
+      renderFavourites(selectedSeries);
     })
 };
 
-
-function getSerieFromAPI(serieID) {
-    let url = 'http://api.tvmaze.com/shows/' + serieID;
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-          console.log(serieID, data)
-        renderFavoriteShow(data);
-        
-      })
-  };
-  
-  
 //RENDER SERIES SEARCHED
 
 
@@ -49,12 +40,12 @@ function renderSeries(series) {
 
   main.innerHTML = ''
 
-  for (let item of series) {
-    if (item.show.image !== null) {
-      main.innerHTML += `<section id='${item.show.id.toString()}' class='section'><div><img src=${item.show.image.medium} alt=${item.show.name} class='image'></div><h3 class='section-title'>${item.show.name}</h3></section>`
+  for (let serie of serieList) {
+    if (serie.show.image !== null) {
+      main.innerHTML += `<section id='${serie.show.id.toString()}' class='section'><div><img src=${serie.show.image.medium} alt=${serie.show.name} class='image'></div><h3 class='section-title'>${serie.show.name}</h3></section>`
     } else {
-      main.innerHTML += `<section id='${item.show.id.toString()}' class='section'><div><img src='https://via.placeholder.com/210x295/ffffff/666666/?
-    text=TV' alt=${item.show.name} class='image container'></div><h3 class='section-title'>${item.show.name}</h3></section>`
+      main.innerHTML += `<section id='${serie.show.id.toString()}' class='section'><div><img src='https://via.placeholder.com/210x295/ffffff/666666/?
+      text=TV' alt=${serie.show.name} class='image container'></div><h3 class='section-title'>${serie.show.name}</h3></section>`
     }
   }
   addClickListeners();
@@ -67,54 +58,90 @@ function addClickListeners() {
   }
 }
 
+
+
+//LOCALSTORAGE
+
+function setLocalStorage() {
+  localStorage.setItem('serieInfo', JSON.stringify(selectedSeries))
+}
+
+
+function readLocalStorage() {
+  
+  let localInfo = JSON.parse(localStorage.getItem('serieInfo'))
+  if (localInfo !== null) {
+    return localInfo
+  } else {
+    return localInfo = []
+  }
+}
+
 //FAVOURITES
 
 
-function addToFavorites(serieID) {
-    let favoriteList = JSON.parse(localStorage.getItem('favouriteIDsList'));
-    if(favoriteList === null) {
-        favoriteList = [];
-    }
-    if (favoriteList.indexOf(serieID) === -1) {
-        favoriteList.push(serieID);
-        localStorage.setItem('favouriteIDsList', JSON.stringify(favoriteList));
-    }
-}
-
 function saveFavourites(event) {
-  const serieID = event.currentTarget.id;
-  if (favouriteList.indexOf(favourite) === -1) {
- 
-    // guardar ID en localStorage
-    addToFavorites(serieID);
-    // renderizar todos las series
-    renderAllSavedShows()
+  const favourite = event.currentTarget;
+  if (selectedSeries.indexOf(favouriteArray) === -1) {
+    
+    selectedSeries.push(favouriteArray);
+    
+    setLocalStorage()
+    renderFavourites();
 
-    } else {
-        alert('Esa serie ya está en favoritos')
+  } else {
+    alert('Esa serie ya está en favoritos')
+  }
+}
+console.log(favouriteArray)
+
+
+function getSerieObject() {
+  return serieList.find(serie => serie.show === parseInt())
+}
+
+
+
+
+function renderFavourites(favouriteArray) {
+
+  favouriteContainerList.innerHTML = '';
+  for (let favourite of favouriteArray) {
+    const serie = getSerieObject(favourite);
+
+    if (favourite === serie.show.id) {
+      favouriteContainerList.innerHTML += `<li class='li-title'>${serie.show.name}<button type="button">Borrar</button><li>`;
+      addFavouriteListeners();
     }
+  }
 }
 
 
 
-function renderAllSavedShows() {
-    favouriteContainerList.innerHTML = '';
-    const favoriteList = JSON.parse(localStorage.getItem('favouriteIDsList'))
-    if(favoriteList !== null) {
-        for( let serieID of favoriteList){
-            getSerieFromAPI(serieID)
-        }
-    }
+
+
+
+
+
+
+
+function addFavouriteListeners() {
+  const liList = document.querySelectorAll('button');
+  for (let li of liList) {
+    li.addEventListener('click', removeSerie);
+  }
 }
 
 
-function renderFavoriteShow(serieObjet) {
-    favouriteContainerList.innerHTML += `<li class='li-title'>${serieObjet.name}<li>`;
+function removeSerie(event) {
+  const elemId = event.currentTarget.parentElement.id;
+  const elemIndex = selectedSeries.indexOf(elemId);
+  selectedSeries.splice(elemIndex, 1);
+  setLocalStorage();
+  renderFavourites(selectedSeries);
 }
+
 
 
 //LISTENERS ALL PROJECT
-searchButton.addEventListener('click', searchSeries)
-
-//LOAD PREVIUS SAVED SHOWS
-renderAllSavedShows()
+searchButton.addEventListener('click', connectToApi)
